@@ -26,6 +26,9 @@ namespace NanaDialogMaker
         std::string memberName_;
     };
 
+    class AutoProperty
+    {};
+
     template <typename T>
     struct PropertyFromValueType
     {

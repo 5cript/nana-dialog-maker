@@ -39,6 +39,22 @@ namespace NanaDialogMaker
          */
         bool isDirty() const noexcept override;
 
+        static std::string defaultTemplateString(int height, int labelWidth, int verticalPadding) noexcept
+        {
+            using namespace std::string_literals;
+
+            return
+                "<max="s + std::to_string(height) +
+                    "<vertical max=" + std::to_string(labelWidth) +
+                        "<weight=3>" +
+                        "<{0}_NANA_DIALOG_MAKER_LABEL>" +
+                    ">" +
+                    "<{0}>" +
+                ">" +
+                "<weight=" + std::to_string(verticalPadding) + ">"
+            ;
+        }
+
     private:
         nana::label description_;
         nana::textbox inputbox_;
