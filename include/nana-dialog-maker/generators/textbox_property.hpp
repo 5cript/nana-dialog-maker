@@ -20,7 +20,6 @@ namespace NanaDialogMaker
         TextboxProperty
         (
             std::string memberName,
-            std::string const& defaultValue,
             nana::panel <false>* parent,
             const char* description,
             bool multiLines = false
@@ -39,6 +38,20 @@ namespace NanaDialogMaker
          */
         bool isDirty() const noexcept override;
 
+        /**
+         *  Commit the ui data to the model.
+         */
+        void store(held_type& str) const;
+
+        /**
+         *  Load values from model to ui.
+         */
+        void load(held_type const& str);
+
+        /**
+         *  Create an exemplary layout with some padding.
+         *  Optional to provide.
+         */
         static std::string defaultTemplateString(int height, int labelWidth, int verticalPadding) noexcept
         {
             using namespace std::string_literals;

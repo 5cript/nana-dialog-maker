@@ -15,8 +15,6 @@ namespace NanaDialogMaker
         for (auto& prop : props)
             prop->addToPlace(layout);
 
-        std::cout << layoutString << "\n";
-
         layout.div(layoutString);
         layout.collocate();
     }

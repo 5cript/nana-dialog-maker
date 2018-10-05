@@ -10,6 +10,8 @@
 #include <string>
 #include <memory>
 #include <algorithm>
+#include <mutex>
+#include <thread>
 
 #include <boost/mpl/range_c.hpp>
 #include <boost/mpl/for_each.hpp>
@@ -100,6 +102,8 @@ namespace NanaDialogMaker::detail
             std::vector <std::unique_ptr <NanaDialogMaker::Property>> properties_;\
             NanaDialogMaker::PropertyFactory <holder_type> propFactory_;\
             nana::place layout_;\
+            mutable holder_type holder_;\
+            mutable std::recursive_mutex holderGuard_;\
             \
             void construct()\
             {\
@@ -126,6 +130,13 @@ namespace NanaDialogMaker::detail
                 );\
             }\
             \
+            bool areControlsAlive() const \
+            {\
+                if constexpr (boost::fusion::result_of::size<holder_type>::type::value > 0)\
+                    return properties_.front()->isAlive();\
+                return false;\
+            }\
+            \
         public:\
             BOOST_PP_CAT(object, NANA_DIALOG_MAKER_CLASS_SUFFIX)()\
                 : properties_{}\
@@ -133,6 +144,10 @@ namespace NanaDialogMaker::detail
                 , layout_{*this}\
             {\
                 construct();\
+            }\
+            \
+            ~BOOST_PP_CAT(object, NANA_DIALOG_MAKER_CLASS_SUFFIX)()\
+            {\
             }\
             \
             BOOST_PP_CAT(object, NANA_DIALOG_MAKER_CLASS_SUFFIX)(nana::window wd, bool visible = true)\
@@ -152,6 +167,14 @@ namespace NanaDialogMaker::detail
             std::vector <std::unique_ptr <NanaDialogMaker::Property>>& properties()\
             {\
                 return properties_;\
+            }\
+            \
+            bool isDirty() const \
+            {\
+                for (auto const& i : properties_)\
+                    if (i->isDirty())\
+                        return true;\
+                return false;\
             }\
             \
             template <typename LayoutTemplateT>\
@@ -176,6 +199,61 @@ namespace NanaDialogMaker::detail
                     }\
                 );\
                 return baseTemplate.format(collection);\
+            }\
+            \
+            holder_type data() const\
+            {\
+                namespace mpl = boost::mpl;\
+                namespace fusion = boost::fusion;\
+                \
+                std::scoped_lock <std::recursive_mutex> guard(holderGuard_);\
+                \
+                if (!areControlsAlive())\
+                    return holder_;\
+                mpl::for_each<mpl::range_c<std::size_t, 0, boost::fusion::result_of::size<holder_type>::type::value>>\
+                (\
+                    [this](auto index)\
+                    {\
+                        using index_type = std::decay_t<decltype(index)>;\
+                        using property_type = typename NanaDialogMaker::detail::AutoPropertyChooser <\
+                            std::decay_t <typename fusion::result_of::at <holder_type, index_type>::type>,\
+                            std::tuple_element_t <index_type::value, property_types>\
+                        >::type;\
+                        \
+                        static_cast <property_type*>(properties_[index_type::value].get())->store(\
+                            fusion::at <index_type>(holder_)\
+                        );\
+                    }\
+                );\
+                return holder_;\
+            }\
+            \
+            void data(holder_type const& holder)\
+            {\
+                namespace mpl = boost::mpl;\
+                namespace fusion = boost::fusion;\
+                \
+                std::scoped_lock <std::recursive_mutex> guard(holderGuard_);\
+                \
+                holder_ = holder;\
+                if (!areControlsAlive())\
+                    return;\
+                \
+                mpl::for_each<mpl::range_c<std::size_t, 0, boost::fusion::result_of::size<holder_type>::type::value>>\
+                (\
+                    [this, &holder](auto index)\
+                    {\
+                        using index_type = std::decay_t<decltype(index)>;\
+                        using property_type = typename NanaDialogMaker::detail::AutoPropertyChooser <\
+                            std::decay_t <typename fusion::result_of::at <holder_type, index_type>::type>,\
+                            std::tuple_element_t <index_type::value, property_types>\
+                        >::type;\
+                        \
+                        static_cast <property_type*>(properties_[index_type::value].get())->load(\
+                            fusion::at <index_type>(holder)\
+                        );\
+                    }\
+                );\
             }\
             \
             nana::place& layout()\

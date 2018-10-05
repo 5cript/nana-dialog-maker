@@ -1,17 +1,3 @@
-# nana-dialog-maker
-Generates very basic input form dialogs that are repetitive to make in nana.
-
-Structures can be adapted to become nana panels with logical controls that allow for their modification.
-
-Support:
-	- Single Line TextBox for std::string
-	- [PENDING] Checkbox for bool
-	- [PENDING] Number Edits (spinbox)
-	- [PENDING] Password Input
-	- [PENDING] Combox -> select from a few options.
-
-## Example
-```C++
 #include <nana-dialog-maker/generators/textbox_property.hpp>
 #include <nana-dialog-maker/make_panel.hpp>
 #include <nana-dialog-maker/layouting.hpp>
@@ -82,8 +68,6 @@ int main()
     diag.show();
 
 	// get data from panel controls.
-	// the data function can also be used to fill the form with previous data.
     auto p = diag.data <ThingPanel>().front();
     std::cout << p.id << ": " << p.code << "\n";
 }
-```

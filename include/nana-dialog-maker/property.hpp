@@ -22,8 +22,14 @@ namespace NanaDialogMaker
          */
         virtual bool isDirty() const noexcept = 0;
 
+        /**
+         *  Returns whether or not the control is alive or destroyed.
+         */
+        bool isAlive() const noexcept;
+
     protected:
         std::string memberName_;
+        bool alive_; // set to false if deconstruction happened.
     };
 
     class AutoProperty
