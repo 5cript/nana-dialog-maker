@@ -1,5 +1,6 @@
 # nana-dialog-maker
-Generates very basic input form dialogs that are repetitive to make in nana.
+Generates very basic input form panels that are repetitive to make in nana.
+It generates panels, that can be arbitrarily embedded into other forms!!
 
 Structures can be adapted to become nana panels with logical controls that allow for their modification.
 
@@ -14,6 +15,9 @@ Dependencies:
 * boost fusion
 * fmt::format here on github
 * nana
+
+## Visual Example
+![Example Panel](https://user-images.githubusercontent.com/6238896/46636817-cdcb9800-cb59-11e8-997e-3a7e26c440b5.png)
 
 ## Long Example
 ```C++
