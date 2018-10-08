@@ -35,7 +35,7 @@ namespace NanaDialogMaker
 //---------------------------------------------------------------------------------------------------------------------
     void ComboxProperty::store(held_type& str) const
     {
-        if (selector_.the_number_of_options() != 0)
+        if (selector_.the_number_of_options() != 0 && selector_.option() >= 0 && selector_.option() < selector_.the_number_of_options())
             str = selector_.text(selector_.option());
     }
 //---------------------------------------------------------------------------------------------------------------------

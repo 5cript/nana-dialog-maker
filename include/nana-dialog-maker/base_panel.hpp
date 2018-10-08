@@ -179,6 +179,13 @@ namespace NanaDialogMaker
                             std::decay_t <typename fusion::result_of::at <holder_type, index_type>::type>,
                             std::tuple_element_t <index_type::value, typename DerivedT::property_types>
                         >::type;
+
+                        // If you get an error here, you are using a property generator, but you are not
+                        // providing a layout template.
+                        //
+                        // for instance, you use a "IntegralProperty <int>" but you dont have a layout for it.
+                        // I deliberately dont check for existence, because widgets that just dont show up are
+                        // worse than an error.
                         auto templ = fusion::at_key<property_type>(templates);
                         collection += templ.format(fusion::extension::struct_member_name<holder_type, index_type::value>::call());
                     }
