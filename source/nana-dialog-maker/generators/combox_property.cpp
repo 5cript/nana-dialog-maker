@@ -10,21 +10,19 @@ namespace NanaDialogMaker
         std::string memberName,
         nana::panel <false>* parent,
         const char* description,
-        std::vector <std::string> const& options,
-        bool editable
+        std::function <void(nana::combox&)> initializer
     )
         : Property(std::move(memberName))
         , description_{*parent, description}
         , selector_{*parent}
     {
-        selector_.editable(editable);
-        for (auto const& i : options)
-            selector_.push_back(i);
-
         selector_.events().destroy([this](auto const&)
         {
             alive_ = false;
         });
+
+        if (initializer)
+            initializer(selector_);
     }
 //---------------------------------------------------------------------------------------------------------------------
     void ComboxProperty::addToPlace(nana::place& place)

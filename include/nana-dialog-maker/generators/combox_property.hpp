@@ -7,6 +7,8 @@
 #include <nana/gui/widgets/panel.hpp>
 #include <nana/gui/place.hpp>
 
+#include <functional>
+
 namespace NanaDialogMaker
 {
     class ComboxProperty : public Property
@@ -22,8 +24,7 @@ namespace NanaDialogMaker
             std::string memberName,
             nana::panel <false>* parent,
             const char* description,
-            std::vector <std::string> const& options = {},
-            bool editable = false
+            std::function <void(nana::combox&)> initializer = {}
         );
 
         ComboxProperty& operator=(ComboxProperty const&) = delete;

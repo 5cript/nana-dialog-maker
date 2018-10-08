@@ -36,3 +36,4 @@
 /main.cpp
 /*.depend
 /*.layout
+build/*

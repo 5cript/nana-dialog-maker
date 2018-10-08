@@ -58,13 +58,19 @@ int main()
     dialog.constructPanel <PersonPanel>
     (
         boost::fusion::map <
-            boost::fusion::pair <PersonPanel::Ids::firstName, std::tuple <std::vector <std::string>, bool>>,
+            boost::fusion::pair <PersonPanel::Ids::firstName, std::tuple <std::function <void(nana::combox&)>>>,
             boost::fusion::pair <PersonPanel::Ids::lastName, std::tuple <std::function <void(nana::textbox&)>>>
         >
         {
-            boost::fusion::make_pair <PersonPanel::Ids::firstName>(std::tuple <std::vector <std::string>, bool>{
-                {"Tim", "Hans", "Franz"},
-                false
+            boost::fusion::make_pair <PersonPanel::Ids::firstName>(std::tuple <std::function <void(nana::combox&)>>{
+                [](nana::combox& cb)
+                {
+                    for (auto&& i : {"Markus", "Hans", "Franz"})
+                    {
+                        cb.push_back(i);
+                    }
+                    cb.editable(false);
+                }
             }),
             boost::fusion::make_pair <PersonPanel::Ids::lastName>(std::tuple <std::function <void(nana::textbox&)>>{
                 [](nana::textbox& tb)
@@ -146,7 +152,9 @@ int main()
     dialog.show();
 
     auto p = dialog.data <PersonPanel>().front();
-    std::cout << p.firstName << ":" << p.lastName.value() << "\n";
+    std::cout << p.firstName << ":";
+    if (p.lastName)
+        std::cout << p.lastName.value() << "\n";
 
     return 0;
 }

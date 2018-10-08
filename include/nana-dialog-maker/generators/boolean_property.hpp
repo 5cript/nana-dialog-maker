@@ -6,6 +6,8 @@
 #include <nana/gui/widgets/checkbox.hpp>
 #include <nana/gui/place.hpp>
 
+#include <functional>
+
 namespace NanaDialogMaker
 {
     class BooleanProperty : public Property
@@ -20,7 +22,8 @@ namespace NanaDialogMaker
         (
             std::string memberName,
             nana::panel <false>* parent,
-            const char* description
+            const char* description,
+            std::function <void(nana::checkbox&)> initializer = {}
         );
 
         BooleanProperty& operator=(BooleanProperty const&) = delete;

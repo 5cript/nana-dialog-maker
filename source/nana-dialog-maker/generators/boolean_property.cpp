@@ -7,7 +7,8 @@ namespace NanaDialogMaker
     (
         std::string memberName,
         nana::panel <false>* parent,
-        const char* description
+        const char* description,
+        std::function <void(nana::checkbox&)> initializer
     )
         : Property(std::move(memberName))
         , checkbox_{*parent, description}
@@ -22,6 +23,9 @@ namespace NanaDialogMaker
         {
             alive_ = false;
         });
+
+        if (initializer)
+            initializer(checkbox_);
     }
 //---------------------------------------------------------------------------------------------------------------------
     void BooleanProperty::addToPlace(nana::place& place)
