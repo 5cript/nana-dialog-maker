@@ -20,6 +20,11 @@ namespace NanaDialogMaker
         selector_.editable(editable);
         for (auto const& i : options)
             selector_.push_back(i);
+
+        selector_.events().destroy([this](auto const&)
+        {
+            alive_ = false;
+        });
     }
 //---------------------------------------------------------------------------------------------------------------------
     void ComboxProperty::addToPlace(nana::place& place)
@@ -33,9 +38,18 @@ namespace NanaDialogMaker
         return dirty_;
     }
 //---------------------------------------------------------------------------------------------------------------------
+    bool ComboxProperty::isSet() const noexcept
+    {
+        return
+            selector_.the_number_of_options() != 0 &&
+            selector_.option() >= 0 &&
+            selector_.option() < selector_.the_number_of_options()
+        ;
+    }
+//---------------------------------------------------------------------------------------------------------------------
     void ComboxProperty::store(held_type& str) const
     {
-        if (selector_.the_number_of_options() != 0 && selector_.option() >= 0 && selector_.option() < selector_.the_number_of_options())
+        if (isSet())
             str = selector_.text(selector_.option());
     }
 //---------------------------------------------------------------------------------------------------------------------

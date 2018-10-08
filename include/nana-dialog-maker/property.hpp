@@ -23,6 +23,11 @@ namespace NanaDialogMaker
         virtual bool isDirty() const noexcept = 0;
 
         /**
+         *  Used for optionals. Required, but can always return true.
+         */
+        virtual bool isSet() const noexcept = 0;
+
+        /**
          *  Returns whether or not the control is alive or destroyed.
          */
         bool isAlive() const noexcept;

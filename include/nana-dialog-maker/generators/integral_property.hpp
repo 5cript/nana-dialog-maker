@@ -40,7 +40,7 @@ namespace NanaDialogMaker
             , dirty_{false}
         {
             inputbox_.set_accept([](auto c){
-                return std::isdigit(c);
+                return std::isdigit(c) || c == nana::keyboard::backspace;
             });
 
             inputbox_.events().first_change([this](auto const&)
@@ -72,6 +72,14 @@ namespace NanaDialogMaker
         bool isDirty() const noexcept override
         {
             return dirty_;
+        }
+
+        /**
+         *  Used for optionals.
+         */
+        bool isSet() const noexcept override
+        {
+            return !inputbox_.caption().empty();
         }
 
         /**

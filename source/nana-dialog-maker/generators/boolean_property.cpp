@@ -17,6 +17,11 @@ namespace NanaDialogMaker
         {
             dirty_ = true;
         });
+
+        checkbox_.events().destroy([this](auto const&)
+        {
+            alive_ = false;
+        });
     }
 //---------------------------------------------------------------------------------------------------------------------
     void BooleanProperty::addToPlace(nana::place& place)
@@ -27,6 +32,11 @@ namespace NanaDialogMaker
     bool BooleanProperty::isDirty() const noexcept
     {
         return dirty_;
+    }
+//---------------------------------------------------------------------------------------------------------------------
+    bool BooleanProperty::isSet() const noexcept
+    {
+        return true;
     }
 //---------------------------------------------------------------------------------------------------------------------
     void BooleanProperty::store(held_type& value) const

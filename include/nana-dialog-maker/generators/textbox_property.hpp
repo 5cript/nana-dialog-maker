@@ -41,6 +41,11 @@ namespace NanaDialogMaker
         bool isDirty() const noexcept override;
 
         /**
+         *  Used for optionals.
+         */
+        bool isSet() const noexcept override;
+
+        /**
          *  Commit the ui data to the model.
          */
         void store(held_type& str) const;
