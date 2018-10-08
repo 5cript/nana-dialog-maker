@@ -66,7 +66,10 @@
             \
             static constexpr const char* name = BOOST_PP_STRINGIZE(BOOST_PP_CAT(object, NANA_DIALOG_MAKER_CLASS_SUFFIX));\
             \
-            BOOST_PP_SEQ_FOR_EACH_I(NANA_DIALOG_MAKER_INDEX_TYPE_NAMES, _, seq)\
+            struct Ids\
+            {\
+                BOOST_PP_SEQ_FOR_EACH_I(NANA_DIALOG_MAKER_INDEX_TYPE_NAMES, _, seq)\
+            };\
             \
         public:\
             using BasePanel::BasePanel;\

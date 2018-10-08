@@ -80,8 +80,8 @@ namespace NanaDialogMaker
              *  Constructs all elements within the panel. MUST BE CALLED
              *  It forwards the arguments from the boost::fusion::map to the constructors, where passed.
              */
-            template <typename T>
-            void constructProperties(T const& argumentMap)
+            template <typename T = boost::fusion::map<>>
+            void constructProperties(T const& argumentMap = {})
             {
                 namespace mpl = boost::mpl;
                 namespace fusion = boost::fusion;

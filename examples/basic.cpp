@@ -58,15 +58,15 @@ int main()
     dialog.constructPanel <PersonPanel>
     (
         boost::fusion::map <
-            boost::fusion::pair <PersonPanel::firstName, std::tuple <std::vector <std::string>, bool>>,
-            boost::fusion::pair <PersonPanel::lastName, std::tuple <std::function <void(nana::textbox&)>>>
+            boost::fusion::pair <PersonPanel::Ids::firstName, std::tuple <std::vector <std::string>, bool>>,
+            boost::fusion::pair <PersonPanel::Ids::lastName, std::tuple <std::function <void(nana::textbox&)>>>
         >
         {
-            boost::fusion::make_pair <PersonPanel::firstName>(std::tuple <std::vector <std::string>, bool>{
+            boost::fusion::make_pair <PersonPanel::Ids::firstName>(std::tuple <std::vector <std::string>, bool>{
                 {"Tim", "Hans", "Franz"},
                 false
             }),
-            boost::fusion::make_pair <PersonPanel::lastName>(std::tuple <std::function <void(nana::textbox&)>>{
+            boost::fusion::make_pair <PersonPanel::Ids::lastName>(std::tuple <std::function <void(nana::textbox&)>>{
                 [](nana::textbox& tb)
                 {
                     tb.multi_lines(true);
