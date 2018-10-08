@@ -17,6 +17,15 @@ Dependencies:
 * nana
 
 ## Visual Example
+```C++
+struct Person
+{
+	std::string firstName;
+	std::string lastName;
+	int age;
+	bool isMale;
+};
+```
 ![Example Panel](https://user-images.githubusercontent.com/6238896/46636817-cdcb9800-cb59-11e8-997e-3a7e26c440b5.png)
 
 ## Long Example
