@@ -3,6 +3,7 @@
 #include "../property.hpp"
 
 #include <nana/gui/widgets/combox.hpp>
+#include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/panel.hpp>
 #include <nana/gui/place.hpp>
 
@@ -20,7 +21,9 @@ namespace NanaDialogMaker
         (
             std::string memberName,
             nana::panel <false>* parent,
-            const char* description
+            const char* description,
+            std::vector <std::string> const& options = {},
+            bool editable = false
         );
 
         ComboxProperty& operator=(ComboxProperty const&) = delete;
@@ -47,7 +50,8 @@ namespace NanaDialogMaker
         void load(held_type const& str);
 
     private:
-        nana::combox description_;
+        nana::label description_;
+        nana::combox selector_;
         bool dirty_;
     };
 }

@@ -69,6 +69,17 @@ namespace NanaDialogMaker
             {
             }
 
+            ~BasePanel() = default;
+
+            BasePanel(BasePanel const&) = delete;
+            BasePanel& operator=(BasePanel const&) = delete;
+            BasePanel(BasePanel&&) = default;
+            BasePanel& operator=(BasePanel&&) = default;
+
+            /**
+             *  Constructs all elements within the panel
+             *  It forwards the arguments from the boost::fusion::map to the constructors, where passed.
+             */
             template <typename T>
             void constructProperties(T const& argumentMap)
             {
@@ -117,6 +128,10 @@ namespace NanaDialogMaker
                 );
             }
 
+            /**
+             *  Returns whether the controls are alive or not having a modal dialog with panels in it
+             *  will kill the panels when the dialog hides (which is dumb behavior imho).
+             */
             bool areControlsAlive() const
             {
                 if constexpr (boost::fusion::result_of::size<holder_type>::type::value > 0)
@@ -124,18 +139,17 @@ namespace NanaDialogMaker
                 return false;
             }
 
-            ~BasePanel() = default;
-
-            BasePanel(BasePanel const&) = delete;
-            BasePanel& operator=(BasePanel const&) = delete;
-            BasePanel(BasePanel&&) = default;
-            BasePanel& operator=(BasePanel&&) = default;
-
+            /**
+             *  Retrieve a reference to the internal property store that has'em all.
+             */
             std::vector <std::unique_ptr <NanaDialogMaker::Property>>& properties()
             {
                 return properties_;
             }
 
+            /**
+             *  Has any of the controls been modified.
+             */
             bool isDirty() const
             {
                 for (auto const& i : properties_)
@@ -144,6 +158,10 @@ namespace NanaDialogMaker
                 return false;
             }
 
+            /**
+             *  Generates a layout for the entire panel that encompasses all widgets.
+             *  Each property_type has its own template from which a part of the layout is built.
+             */
             template <typename LayoutTemplateT>
             std::string generateLayout(LayoutTemplateT const& templates)
             {
@@ -195,6 +213,10 @@ namespace NanaDialogMaker
                 return holder_;
             }
 
+            /**
+             *  Extract all the data from the ui elements, or from the memorized storage if controls are dead.
+             *  This does require the user to call this function once in the owning dialog unload, or all data is lost.
+             */
             void data(holder_type const& holder)
             {
                 namespace mpl = boost::mpl;
@@ -223,6 +245,9 @@ namespace NanaDialogMaker
                 );
             }
 
+            /**
+             *  Retrieve the nana::place of this panel.
+             */
             nana::place& layout()
             {
                 return layout_;

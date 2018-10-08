@@ -8,14 +8,14 @@ namespace NanaDialogMaker
         std::string memberName,
         nana::panel <false>* parent,
         const char* description,
-        bool multiLines
+        std::function <void(nana::textbox&)> initializer
     )
         : Property(std::move(memberName))
         , description_{*parent, description}
         , inputbox_{*parent}
         , dirty_{false}
     {
-        inputbox_.multi_lines(multiLines);
+        initializer(inputbox_);
 
         inputbox_.events().first_change([this](auto const&)
         {

@@ -7,6 +7,8 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/place.hpp>
 
+#include <functional>
+
 namespace NanaDialogMaker
 {
     class TextboxProperty : public Property
@@ -22,7 +24,7 @@ namespace NanaDialogMaker
             std::string memberName,
             nana::panel <false>* parent,
             const char* description,
-            bool multiLines = false
+            std::function <void(nana::textbox&)> initializer = {}
         );
 
         TextboxProperty& operator=(TextboxProperty const&) = delete;
