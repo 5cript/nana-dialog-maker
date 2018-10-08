@@ -10,6 +10,10 @@ Support:
 	- [PENDING] Password Input
 	- [PENDING] Combox -> select from a few options.
 
+Dependencies:
+	- boost fusion
+	- fmt::format here on github
+
 ## Example
 ```C++
 #include <nana-dialog-maker/generators/textbox_property.hpp>

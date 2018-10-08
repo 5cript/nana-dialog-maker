@@ -17,8 +17,9 @@ namespace NanaDialogMaker
         nana::place layout_;
 
     public:
-        explicit GeneratedDialog()
-            : panels_{((void)sizeof(Panels), *this)...}
+        explicit GeneratedDialog(nana::rectangle const& rect = nana::API::make_center(300, 200), const nana::appearance& appearance={})
+			: nana::form{rect, appearance}
+            , panels_{((void)sizeof(Panels), *this)...}
             , layout_{*this}
         {
             events().unload([this](auto const&) {
@@ -28,7 +29,7 @@ namespace NanaDialogMaker
                     data <std::decay_t <decltype(panel)>>();
                 };
 
-                std::apply([&apply](auto&... panel){(apply(panel), ...);},panels_);
+                std::apply([&apply](auto&... panel){(apply(panel), ...);}, panels_);
             });
         }
 
@@ -49,8 +50,26 @@ namespace NanaDialogMaker
                 }
             };
 
-            std::apply([&conditionalApply](auto const&... panel){(conditionalApply(panel), ...);},panels_);
+            std::apply([&conditionalApply](auto const&... panel){(conditionalApply(panel), ...);}, panels_);
             return results;
+        }
+
+        /**
+         *  Constructs the respective panel.
+         */
+        template <typename T, typename ArgumentMap>
+        void constructPanel(ArgumentMap&& map)
+        {
+            auto conditionalApply = [this, &map](auto& panel)
+            {
+                using panel_t = std::decay_t <decltype(panel)>;
+                if constexpr (std::is_same_v <panel_t, T>)
+                {
+                    panel.constructProperties(std::forward <ArgumentMap> (map));
+                }
+            };
+
+            std::apply([&conditionalApply](auto&... panel){(conditionalApply(panel), ...);}, panels_);
         }
 
         /**
@@ -66,7 +85,7 @@ namespace NanaDialogMaker
                     panel.data(values);
             };
 
-            std::apply([&conditionalApply](auto&... panel){(conditionalApply(panel), ...);},panels_);
+            std::apply([&conditionalApply](auto&... panel){(conditionalApply(panel), ...);}, panels_);
         }
 
         /**
@@ -83,7 +102,7 @@ namespace NanaDialogMaker
                     anyDirty |= panel.isDirty();
             };
 
-            std::apply([&conditionalApply](auto&... panel){(conditionalApply(panel), ...);},panels_);
+            std::apply([&conditionalApply](auto&... panel){(conditionalApply(panel), ...);}, panels_);
             return anyDirty;
         }
 
@@ -101,7 +120,7 @@ namespace NanaDialogMaker
                     NanaDialogMaker::applyLayout(panel, panel.generateLayout(templates));
             };
 
-            std::apply([&conditionalApply](auto&... panel){(conditionalApply(panel), ...);},panels_);
+            std::apply([&conditionalApply](auto&... panel){(conditionalApply(panel), ...);}, panels_);
         }
 
         /**
@@ -118,7 +137,7 @@ namespace NanaDialogMaker
                     NanaDialogMaker::applyLayout(panel, layoutString);
             };
 
-            std::apply([&conditionalApply](auto&... panel){(conditionalApply(panel), ...);},panels_);
+            std::apply([&conditionalApply](auto&... panel){(conditionalApply(panel), ...);}, panels_);
         }
 
         /**
@@ -133,7 +152,7 @@ namespace NanaDialogMaker
                 layout_.field(T::name) << panel;
             };
 
-            std::apply([&addPanelToLayout](auto&... panel){(addPanelToLayout(panel), ...);},panels_);
+            std::apply([&addPanelToLayout](auto&... panel){(addPanelToLayout(panel), ...);}, panels_);
 
             layout_.div(layoutString);
             layout_.collocate();

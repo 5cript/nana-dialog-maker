@@ -10,7 +10,7 @@
 
 namespace NanaDialogMaker
 {
-    template <typename DataHolderT, typename DefaultConstructible = void>
+    template <typename DataHolderT>
     struct PropertyFactory
     {
         template <typename IndexT, typename U, typename... List>
