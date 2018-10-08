@@ -52,6 +52,9 @@ namespace NanaDialogMaker
             {
                 alive_ = false;
             });
+
+            if (initializer)
+                initializer(inputbox_);
         }
 
         IntegralProperty& operator=(IntegralProperty const&) = delete;

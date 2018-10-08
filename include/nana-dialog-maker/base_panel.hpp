@@ -42,8 +42,8 @@ namespace NanaDialogMaker
         };
     }
 
-    template <typename DerivedT, typename HolderT>
-    class BasePanel : public nana::panel <false>
+    template <typename DerivedT, typename HolderT, bool hasBackground = false>
+    class BasePanel : public nana::panel <hasBackground>
     {
         public:
             using holder_type = HolderT;
@@ -56,13 +56,13 @@ namespace NanaDialogMaker
             mutable std::recursive_mutex holderGuard_;
 
         public: // Interface
-            BasePanel()
+            explicit BasePanel()
                 : properties_{}
                 , layout_{*this}
             {
             }
 
-            BasePanel(nana::window wd, bool visible = true)
+            explicit BasePanel(nana::window wd, bool visible = true)
                 : nana::panel <false>(wd, visible)
                 , properties_{}
                 , layout_{*this}
@@ -77,7 +77,7 @@ namespace NanaDialogMaker
             BasePanel& operator=(BasePanel&&) = default;
 
             /**
-             *  Constructs all elements within the panel
+             *  Constructs all elements within the panel. MUST BE CALLED
              *  It forwards the arguments from the boost::fusion::map to the constructors, where passed.
              */
             template <typename T>
@@ -148,7 +148,7 @@ namespace NanaDialogMaker
             }
 
             /**
-             *  Has any of the controls been modified.
+             *  Has any of the controls been modified?
              */
             bool isDirty() const
             {
@@ -180,7 +180,7 @@ namespace NanaDialogMaker
                             std::tuple_element_t <index_type::value, typename DerivedT::property_types>
                         >::type;
 
-                        // If you get an error here, you are using a property generator, but you are not
+                        // If you get an error here, you are using a property, for which you are not
                         // providing a layout template.
                         //
                         // for instance, you use a "IntegralProperty <int>" but you dont have a layout for it.
@@ -193,6 +193,10 @@ namespace NanaDialogMaker
                 return baseTemplate.format(collection);
             }
 
+            /**
+             *  Extract all the data from the ui elements, or from the memorized storage if controls are dead.
+             *  This does require the user to call this function once in the owning dialog unload, or all data is lost.
+             */
             holder_type data() const
             {
                 namespace mpl = boost::mpl;
@@ -221,8 +225,7 @@ namespace NanaDialogMaker
             }
 
             /**
-             *  Extract all the data from the ui elements, or from the memorized storage if controls are dead.
-             *  This does require the user to call this function once in the owning dialog unload, or all data is lost.
+             *  Sets the ui elements to contain the data of "holder".
              */
             void data(holder_type const& holder)
             {

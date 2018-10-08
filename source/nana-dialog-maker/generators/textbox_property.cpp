@@ -25,7 +25,8 @@ namespace NanaDialogMaker
             alive_ = false;
         });
 
-        initializer(inputbox_);
+        if (initializer)
+            initializer(inputbox_);
     }
 //---------------------------------------------------------------------------------------------------------------------
     void TextboxProperty::addToPlace(nana::place& place)

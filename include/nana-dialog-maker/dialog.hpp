@@ -34,7 +34,8 @@ namespace NanaDialogMaker
         }
 
         /**
-         *  Loads data out of the ui panel.
+         *  Loads the data of the specified panel type.
+         *  Stored in a vector, because multiple panels of the same type may exist. Ordering of template arguments is preserved.
          */
         template <typename T>
         std::vector <typename T::holder_type> data()
@@ -55,10 +56,11 @@ namespace NanaDialogMaker
         }
 
         /**
-         *  Constructs the respective panel.
+         *  Constructs the respective panel. All panels of the same type are constructed with the same parameters.
+         *	Argument map is a fusion::map with a integral_constant as the key to indicate the members. Please see the examples
          */
-        template <typename T, typename ArgumentMap>
-        void constructPanel(ArgumentMap&& map)
+        template <typename T, typename ArgumentMap = boost::fusion::map<>>
+        void constructPanel(ArgumentMap&& map = {})
         {
             auto conditionalApply = [this, &map](auto& panel)
             {
