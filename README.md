@@ -101,12 +101,12 @@ int main()
     // (Is there a use case for the same panel multiple times?)
     dialog.applyLayout("<ThingPanel>");
     
-    nana::API::modal_window(diag);
-    diag.show();
+    nana::API::modal_window(dialog);
+    dialog.show();
 
     // get data from panel controls.
     // the data function can also be used to fill the form with previous data.
-    auto p = diag.data <ThingPanel>().front();
+    auto p = dialog.data <ThingPanel>().front();
     std::cout << p.id << ": " << p.code << "\n";
 }
 ```
