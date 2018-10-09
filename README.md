@@ -50,7 +50,7 @@ NANA_DIALOG_MAKER_MAKE_PANEL
 (
     /* not in a namespace */,
     Thing,
-    ("ID: ", id, NanaDialogMaker::AutoProperty)
+    ("ID: ", id, NanaDialogMaker::AutoProperty) // AutoProperty = automatically decide based on decltype(id)
     ("Code: ", code, NanaDialogMaker::TextboxProperty)
     //("Number: ", number)
 )
